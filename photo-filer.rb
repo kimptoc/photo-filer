@@ -4,8 +4,18 @@ require 'fileutils'
 class PhotoFiler
 
   def go
-    puts "go go go 2b"
-    move "src", "tgt", 1
+    puts ">>PhotoFiler<<"
+    count = -1 # unlimited, move all
+    if ARGV.length < 2
+        puts "Too few arguments: #{ARGV}"
+        exit
+    elsif ARGV.length == 3
+        count = ARGV[2].to_i
+    elsif ARGV.length > 3
+        puts "Too many arguments: #{ARGV}"
+        exit
+    end
+    move ARGV[0], ARGV[1], count
   end
 
   def move(src, tgt, count)
