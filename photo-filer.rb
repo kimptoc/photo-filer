@@ -45,10 +45,15 @@ class PhotoFiler
         elsif File.basename(path).start_with?('.')
             next # skip hidden files, those starting with a dot.
         else
-            t = File.ctime(path)
+            ct = File.ctime(path)
+            at = File.atime(path)
+            mt = File.mtime(path)
+            #puts "File:#{path}, ctime:#{ct}, atime:#{at}, mtime:#{mt}"
+
+            t = mt
             tgt_dir_year = t.year
             tgt_dir_month = "#{'%02d' % t.month}"
-            puts "found path:#{path}, tgt dir:#{tgt_dir_year}/#{tgt_dir_month}"
+            puts "found path:#{path}, tgt dir:#{tgt_dir_year}/#{tgt_dir_month} (file time:#{t})"
             tgt_year_month = "#{tgt}/#{tgt_dir_year}/#{tgt_dir_month}"
             if !FileTest.directory?(tgt_year_month)
                 FileUtils.mkdir_p tgt_year_month
