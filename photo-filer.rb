@@ -41,7 +41,9 @@ class PhotoFiler
     Find.find(src) do |path|
         # puts "#{path} - directory? #{FileTest.directory?(path)}"
         if FileTest.directory?(path)
-            next
+            next # skip subdirectories
+        elsif File.basename(path).start_with?('.')
+            next # skip hidden files, those starting with a dot.
         else
             t = File.ctime(path)
             tgt_dir_year = t.year
