@@ -58,11 +58,16 @@ class PhotoFiler
             if !FileTest.directory?(tgt_year_month)
                 FileUtils.mkdir_p tgt_year_month
             end
-            FileUtils.move path, tgt_year_month
-            done += 1
-            if count > 0 && done >= count
-                break
+            if File.file?("#{tgt_year_month}/#{File.basename(path)}")
+                puts "File exists in target directory already, skipping!"
+            else
+                FileUtils.move path, tgt_year_month, force:false
+                done += 1
+                if count > 0 && done >= count
+                    break
+                end
             end
+
         end
     end
     return done
