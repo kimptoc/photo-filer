@@ -1,22 +1,33 @@
 require 'find'
 require 'fileutils'
+require "yaml"
 
 class PhotoFiler
+
+  ARGS_FILE = "last_args.yaml"
 
   def go
     puts ">>PhotoFiler<<"
     count = -1 # unlimited, move all
-    if ARGV.length < 2
+    if ARGV.length == 1 && ARGV[0] == "-repeat" && File.file?(ARGS_FILE)
+        # see if previous args available
+        src, tgt, count = YAML.load(File.read(ARGS_FILE))
+    elsif ARGV.length < 2
         puts "Too few arguments: #{ARGV}"
         exit
     elsif ARGV.length == 3
+        src = ARGV[0]
+        tgt = ARGV[1]    
         count = ARGV[2].to_i
     elsif ARGV.length > 3
         puts "Too many arguments: #{ARGV}"
         exit
+    else
+        src = ARGV[0]
+        tgt = ARGV[1]    
     end
-    src = ARGV[0]
-    tgt = ARGV[1]
+    File.write(ARGS_FILE, [src, tgt, count].to_yaml)
+
     puts "Moving #{count<0 ? "ALL":count} files from #{src} to #{tgt}"
     start_time = Time.now
     moved = move src, tgt, count
