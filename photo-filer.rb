@@ -15,11 +15,17 @@ class PhotoFiler
         puts "Too many arguments: #{ARGV}"
         exit
     end
-    move ARGV[0], ARGV[1], count
+    src = ARGV[0]
+    tgt = ARGV[1]
+    puts "Moving #{count<0 ? "ALL":count} files from #{src} to #{tgt}"
+    start_time = Time.now
+    moved = move src, tgt, count
+    end_time = Time.now
+    delta = end_time - start_time # in seconds
+    puts "Moved #{moved} files from #{src} to #{tgt} in #{delta} seconds."
   end
 
   def move(src, tgt, count)
-    puts "Moving #{count} files from #{src} to #{tgt}"
     done = 0
     Find.find(src) do |path|
         # puts "#{path} - directory? #{FileTest.directory?(path)}"
@@ -41,8 +47,8 @@ class PhotoFiler
             end
         end
     end
-
-end
+    return done
+  end
 
 end
 
